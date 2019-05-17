@@ -45,50 +45,20 @@ if py3k:
         ],
     )
 
-    def ismethod(object):
-        """Return true if the object is an instance method.
-    
-        Instance method objects provide these attributes:
-            __doc__         documentation string
-            __name__        name with which this method was defined
-            __func__        function object containing implementation of method
-            __self__        instance to which this method is bound"""
-        return isinstance(object, types.MethodType)
+    def ismethod(tobject):
+        """Return true if the object is an instance method."""
+        return isinstance(tobject, types.MethodType)
 
-    def isfunction(object):
-        """Return true if the object is a user-defined function.
-    
-        Function objects provide these attributes:
-            __doc__         documentation string
-            __name__        name with which this function was defined
-            __code__        code object containing compiled function bytecode
-            __defaults__    tuple of any default values for arguments
-            __globals__     global namespace in which this function was defined
-            __annotations__ dict of parameter annotations
-            __kwdefaults__  dict of keyword only parameters with defaults"""
-        return isinstance(object, types.FunctionType)
+    def isfunction(tobject):
+        """Return true if the object is a user-defined function."""
+        return isinstance(tobject, types.FunctionType)
 
-    def iscode(object):
-        """Return true if the object is a code object.
-    
-        Code objects provide these attributes:
-            co_argcount     number of arguments (not including * or ** args)
-            co_code         string of raw compiled bytecode
-            co_consts       tuple of constants used in the bytecode
-            co_filename     name of file in which this code object was created
-            co_firstlineno  number of first line in Python source code
-            co_flags        bitmap: 1=optimized | 2=newlocals | 4=*arg | 8=**arg
-            co_lnotab       encoded mapping of line numbers to bytecode indices
-            co_name         name with which this code object was defined
-            co_names        tuple of names of local variables
-            co_nlocals      number of local variables
-            co_stacksize    virtual machine stack space required
-            co_varnames     tuple of names of arguments and local variables"""
-        return isinstance(object, types.CodeType)
+    def iscode(tobject):
+        """Return true if the object is a code object."""
+        return isinstance(tobject, types.CodeType)
 
     def _getfullargs(co):
         """Get information about the arguments accepted by a code object.
-    
         Four things are returned: (args, varargs, kwonlyargs, varkw), where
         'args' and 'kwonlyargs' are lists of argument names, and 'varargs'
         and 'varkw' are the names of the * and ** arguments or None."""
@@ -100,8 +70,7 @@ if py3k:
         names = co.co_varnames
         nkwargs = co.co_kwonlyargcount
         args = list(names[:nargs])
-        kwonlyargs = list(names[nargs : nargs + nkwargs])
-        step = 0
+        kwonlyargs = list(names[nargs: nargs + nkwargs])
 
         nargs += nkwargs
         varargs = None
@@ -115,7 +84,7 @@ if py3k:
 
     def getfullargspec(func):
         """Get the names and default values of a function's arguments.
-    
+
         A tuple of seven things is returned:
         (args, varargs, varkw, defaults, kwonlyargs, kwonlydefaults annotations).
         'args' is a list of the argument names.
@@ -124,9 +93,9 @@ if py3k:
         'kwonlyargs' is a list of keyword-only argument names.
         'kwonlydefaults' is a dictionary mapping names from kwonlyargs to defaults.
         'annotations' is a dictionary mapping argument names to annotations.
-    
+
         The first four items in the tuple correspond to getargspec().
-        """
+        """ # noqa
 
         if ismethod(func):
             func = func.__func__
@@ -145,7 +114,7 @@ if py3k:
 
     def getargs(co):
         """Get information about the arguments accepted by a code object.
-    
+
         Three things are returned: (args, varargs, varkw), where
         'args' is the list of argument names. Keyword-only arguments are
         appended. 'varargs' and 'varkw' are the names of the * and **
@@ -155,19 +124,19 @@ if py3k:
 
     def getargspec(func):
         """Get the names and default values of a function's arguments.
-    
+
         A tuple of four things is returned: (args, varargs, varkw, defaults).
         'args' is a list of the argument names.
         'args' will include keyword-only argument names.
         'varargs' and 'varkw' are the names of the * and ** arguments or None.
         'defaults' is an n-tuple of the default values of the last n arguments.
-    
+
         Use the getfullargspec() API for Python-3000 code, as annotations
         and keyword arguments are supported. getargspec() will raise ValueError
         if the func has either annotations or keyword arguments.
         """
 
-        args, varargs, varkw, defaults, kwonlyargs, kwonlydefaults, ann = getfullargspec(
+        args, varargs, varkw, defaults, kwonlyargs, _, ann = getfullargspec(
             func
         )
         if kwonlyargs or ann:
@@ -179,5 +148,5 @@ if py3k:
 
 
 else:
-    from inspect import getargspec
-    from inspect import getargs
+    from inspect import getargspec # noqa
+    from inspect import getargs # noqa
